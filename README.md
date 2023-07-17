@@ -52,3 +52,9 @@ Grant privileges to user:
 ```shell
 GRANT ALL ON SCHEMA public TO greenlight;
 ```
+
+To run migrations:
+
+```shell
+migrate -path=./migrations -database="postgres://greenlight:pa55word@localhost/greenlight?sslmode=disable" up
+```
