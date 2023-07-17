@@ -38,3 +38,17 @@ Log in with new user:
 ```shell
 docker exec -it postgresql-greenlight psql --host=localhost --dbname=greenlight --username=greenlight
 ```
+
+### Migrations
+
+Install migration tool:
+
+```shell
+brew install golang-migrate
+```
+
+Grant privileges to user:
+
+```shell
+GRANT ALL ON SCHEMA public TO greenlight;
+```
