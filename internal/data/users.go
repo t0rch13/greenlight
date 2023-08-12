@@ -15,6 +15,8 @@ var (
 	ErrDuplicateEmail = errors.New("duplicate email")
 )
 
+var AnonymousUser = &User{}
+
 type User struct {
 	ID        int64     `json:"id"`
 	CreateAt  time.Time `json:"crated_at"`
@@ -23,6 +25,10 @@ type User struct {
 	Password  password  `json:"-"`
 	Activated bool      `json:"activated"`
 	Verison   int       `json:"-"`
+}
+
+func (u *User) IsAnonymous() bool {
+	return u == AnonymousUser
 }
 
 type password struct {
@@ -43,6 +49,7 @@ func (p *password) Set(plaintextPassword string) error {
 	return nil
 }
 
+// Matches takes a plaintext password and checks it against the password hash
 func (p *password) Matches(plaintextPassword string) (bool, error) {
 	err := bcrypt.CompareHashAndPassword(p.hash, []byte(plaintextPassword))
 	if err != nil {
@@ -57,17 +64,20 @@ func (p *password) Matches(plaintextPassword string) (bool, error) {
 	return true, nil
 }
 
+// ValidateEmail checks the email address
 func ValidateEmail(v *validator.Validator, email string) {
 	v.Check(email != "", "email", "must be provided")
 	v.Check(validator.Matches(email, validator.EmailRX), "email", "must be a valid email address")
 }
 
+// ValidatePasswordPlaintext checks the password
 func ValidatePasswordPlaintext(v *validator.Validator, password string) {
 	v.Check(password != "", "password", "must be provided")
 	v.Check(len(password) >= 8, "password", "must be at least 8 bytes long")
 	v.Check(len(password) <= 72, "password", "must not be more than 72 bytes long")
 }
 
+// ValidateUser validates the provided user
 func ValidateUser(v *validator.Validator, user *User) {
 	v.Check(user.Name != "", "name", "must be provided")
 	v.Check(len(user.Name) <= 500, "name", "must not be more than 500 bytes long")
@@ -87,6 +97,7 @@ type UserModel struct {
 	DB *sql.DB
 }
 
+// Insert adds a new record to the users table
 func (m UserModel) Insert(user *User) error {
 	query := `
     INSERT INTO users (name, email, password_hash, activated)
@@ -111,6 +122,7 @@ func (m UserModel) Insert(user *User) error {
 	return nil
 }
 
+// GetByEmail fetches a single record from the users table by email address
 func (m UserModel) GetByEmail(email string) (*User, error) {
 	query := `
     SELECT id, created_at, name, email, password_hash, activated, version
@@ -144,6 +156,7 @@ func (m UserModel) GetByEmail(email string) (*User, error) {
 	return &user, nil
 }
 
+// Update updates the user details in the database
 func (m UserModel) Update(user *User) error {
 	query := `
     UPDATE users
@@ -178,6 +191,7 @@ func (m UserModel) Update(user *User) error {
 	return nil
 }
 
+// GetForToken fetches user details for token provided
 func (m UserModel) GetForToken(tokenScope, tokenPlaintext string) (*User, error) {
 	tokenHash := sha256.Sum256([]byte(tokenPlaintext))
 
