@@ -135,7 +135,7 @@ func (app *application) readInt(qs url.Values, key string, defaultValue int, v *
 	return i
 }
 
-// background helper accepts an arbritrary function as a parameter
+// background helper accepts an arbitrary function as a parameter
 func (app *application) background(fn func()) {
 	app.wg.Add(1)
 
