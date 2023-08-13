@@ -9,7 +9,7 @@ import (
 	"github.com.jrvldam.greenlight/internal/validator"
 )
 
-func (app *application) createAutenticationTokenHandler(w http.ResponseWriter, r *http.Request) {
+func (app *application) createAuthenticationTokenHandler(w http.ResponseWriter, r *http.Request) {
 	var input struct {
 		Email    string `json:"email"`
 		Password string `json:"password"`
