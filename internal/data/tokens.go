@@ -8,7 +8,7 @@ import (
 	"encoding/base32"
 	"time"
 
-	"github.com.jrvldam.greenlight/internal/validator"
+	"github.com.t0rch13.greenlight/internal/validator"
 )
 
 const (

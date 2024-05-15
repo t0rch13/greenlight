@@ -7,7 +7,7 @@ import (
 	"errors"
 	"time"
 
-	"github.com.jrvldam.greenlight/internal/validator"
+	"github.com.t0rch13.greenlight/internal/validator"
 	"golang.org/x/crypto/bcrypt"
 )
 

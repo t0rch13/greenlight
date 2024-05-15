@@ -1,4 +1,4 @@
-module github.com.jrvldam.greenlight
+module github.com.t0rch13.greenlight
 
 go 1.20
 
